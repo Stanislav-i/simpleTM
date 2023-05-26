@@ -22,7 +22,8 @@ function addNewTask() {
   }
 
   createTask({ text: value })
-    .then((res) => res.json())
+    .then(({ data }) => data)
+    // .then((res) => res.json())
     .then((task) => createLi(task));
   clearInput();
 }
@@ -45,7 +46,10 @@ function handleTaskBehaviuor({ target }) {
       
   } else if (target.classList.contains("close")) {
     deleteTask(target.parentNode.dataset.id)
-      .then((res) => target.parentNode.remove());
+      .then(({ data }) => {
+        target.parentNode.remove()
+        return data
+      });
   }
 }
 
