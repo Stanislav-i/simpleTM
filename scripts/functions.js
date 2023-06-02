@@ -24,7 +24,8 @@ function addNewTask() {
   createTask({ text: value })
     .then(({ data }) => data)
     // .then((res) => res.json())
-    .then((task) => createLi(task));
+    .then((task) => createLi(task))
+    .catch(onError);
   clearInput();
 }
 
@@ -41,24 +42,31 @@ function handleTaskBehaviuor({ target }) {
   if (target.tagName === "LI") {
     target.classList.toggle("checked");
     
-    updateTask(target.dataset.id, target.classList
-      .contains("checked"))
+    updateTask(target.dataset.id, target.classList.contains("checked")).catch(
+      onError
+    );
       
   } else if (target.classList.contains("close")) {
     deleteTask(target.parentNode.dataset.id)
       .then(({ data }) => {
-        target.parentNode.remove()
-        return data
-      });
+        target.parentNode.remove();
+        return data;
+      })
+      .catch(onError);
   }
 }
 
 function fillTasksList() {
   getTasks()
-    .then(tasks => tasks.forEach((task) => createLi(task)));
+    .then(tasks => tasks.forEach((task) => createLi(task)))
+    .catch(onError);
 
     // getTasks().then((tasks) => tasks.forEach(createLi));
   
+}
+
+function onError(err) {
+  alert("Error: " + err.response.statusText);
 }
 
 export { addNewTask, handleTaskBehaviuor, fillTasksList };
